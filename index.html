@@ -504,10 +504,10 @@
         initHearts();
         
         // --- 🔴 TESTING MODE: 5 SECONDS ---
-        //const targetDate = new Date().getTime() + 6000; 
+        const targetDate = new Date().getTime() + 6000;
 
         // --- 🟢 REAL MODE (Saved for later) ---
-         const targetDate = new Date("2026-01-01T00:00:00+05:30").getTime();
+        // const targetDate = new Date("2026-01-01T00:00:00+05:30").getTime();
 
         countdownInterval = setInterval(() => {
             const now = new Date().getTime();
