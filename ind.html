@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Year Surprise 🍫</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- New Antique & Decorative Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Courgette&family=Pacifico&family=Outfit:wght@300;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+    /* --- CORE & ANIMATIONS --- */
+    body {
+        font-family: 'Outfit', sans-serif;
+        overflow: hidden;
+        background-color: #ff9a9e;
+    }
+
+    /* Gradient Background */
+    .animated-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #fbc2eb, #a18cd1);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        z-index: -1;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* --- THE SCENE COMPONENTS --- */
+    
+    /* The Letter Pack (Stack of envelopes) */
+    .letter-pack {
+        position: absolute;
+        bottom: 12%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 320px;
+        height: 220px;
+        cursor: pointer;
+        z-index: 20;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .letter-pack:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+
+    .letter-pack:active {
+        transform: translateX(-50%) scale(0.95);
+    }
+
+    /* DECORATIVE ENVELOPE STYLING (CHOCOLATE EDITION) */
+    .envelope-stack {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        
+        /* Dark Chocolate Gradient Background */
+        background: linear-gradient(135deg, #4e342e 0%, #3e2723 100%);
+        
+        /* Gold Foil Border with Inner Detail */
+        border: 4px solid #c5a059; 
+        outline: 2px solid #2d1b16;
+        outline-offset: -8px;
+        
+        border-radius: 12px;
+        
+        /* Deep Chocolate Stack Shadows */
+        box-shadow: 
+            0 2px 5px rgba(0,0,0,0.2),
+            0 15px 0 -5px #3e2723, /* Dark Chocolate shadow */
+            0 15px 2px -5px rgba(0,0,0,0.3),
+            0 30px 0 -10px #281814, /* Even Darker shadow */
+            0 30px 2px -10px rgba(0,0,0,0.3);
+    }
+    
+    /* V-shape fold on envelope */
+    .envelope-stack::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 0; height: 0;
+        
+        /* Sizing */
+        border-left: 160px solid transparent;
+        border-right: 160px solid transparent;
+        
+        /* Milk Chocolate Flap */
+        border-top: 130px solid #6d4c41; 
+        
+        z-index: 2;
+        border-radius: 8px;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    }
+
+    /* Wax Seal */
+    .heart-sticker {
+        position: absolute;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 50px;
+        background: #c0392b;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        z-index: 3;
+        color: rgba(255,255,255,0.9);
+        border: 3px solid #922b21;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.2);
+        animation: pulse 3s infinite;
+    }
+
+    /* Floating "Open Me" Text */
+    .click-hint {
+        position: absolute;
+        top: -55px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Pacifico', cursive;
+        font-size: 1.1rem;
+        
+        /* Chocolate & Gold Theme */
+        color: #fff;
+        background: #5D4037; 
+        border: 2px solid #c5a059;
+        
+        padding: 6px 16px;
+        border-radius: 99px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        animation: floatHint 3s ease-in-out infinite;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 30;
+    }
+
+    /* Little triangle for the speech bubble */
+    .click-hint::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #c5a059;
+    }
+
+    @keyframes floatHint {
+        0%, 100% { transform: translate(-50%, 0); }
+        50% { transform: translate(-50%, -8px); }
+    }
+
+    /* HEART PROGRESS CONTAINER */
+    .heart-progress {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        z-index: 4; /* Above flap/fold */
+    }
+
+    .progress-heart {
+        font-size: 1.5rem;
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        transition: all 0.5s ease;
+    }
+
+    .progress-heart.popped {
+        transform: scale(0) translateY(-20px);
+        opacity: 0;
+    }
+
+    /* --- THE CAT --- */
+    .cat-container {
+        position: absolute;
+        bottom: 10%;
+        left: 50%;
+        transform: translateX(-200%); 
+        width: 120px;
+        z-index: 25;
+        pointer-events: none;
+    }
+
+    .cat-img {
+        width: 100%;
+        filter: drop-shadow(0 9px 10px rgba(0,0,0,0.1));
+        animation: bounceCat 3s ease-in-out infinite;
+    }
+
+    @keyframes bounceCat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    /* --- THE CHOCOLATE LETTER MODAL --- */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        white-backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Chocolate Frame Container */
+    .choco-frame {
+        position: relative;
+        background: #3E2723; /* Darker Chocolate */
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transform: scale(0.8) translateY(50px);
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        max-width: 90%;
+        width: 400px;
+    }
+
+    .modal-overlay.active .choco-frame {
+        transform: scale(1) translateY(0);
+    }
+
+    /* The "Truffle" Border effect */
+    .truffle-border {
+        position: absolute;
+        inset: -12px;
+        border: 24px dotted #3E2723;
+        border-radius: 35px;
+        pointer-events: none;
+        z-index: -1;
+        filter: drop-shadow(0 4px 2px rgba(0,0,0,0.2));
+    }
+    
+    /* Inner Paper */
+    .letter-paper {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        min-height: 350px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #e5e5e5;
+    }
+
+    .corner-decoration {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        opacity: 0.2;
+    }
+    .corner-tl { top: 0; left: 0; border-top: 4px solid currentColor; border-left: 4px solid currentColor; border-top-left-radius: 10px; }
+    .corner-br { bottom: 0; right: 0; border-bottom: 4px solid currentColor; border-right: 4px solid currentColor; border-bottom-right-radius: 10px; }
+
+    /* --- NEW FONTS --- */
+    .font-antique { font-family: 'Cinzel Decorative', cursive; }
+    .font-hand { font-family: 'Courgette', cursive; }
+    .font-dancing { font-family: 'Dancing Script', cursive; }
+    .font-pacifico { font-family: 'Pacifico', cursive; }
+
+    /* --- UTILS --- */
+    .hidden { display: none; }
+    .flex { display: flex; } /* Utility for End Screen toggling */
+    
+    .close-btn {
+        margin-top: 20px;
+        background: #3E2723;
+        color: #ece5e9;
+        border: 2px solid #5D4037;
+        padding: 8px 24px;
+        border-radius: 999px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.2s;
+        font-family: 'Outfit', sans-serif;
+    }
+    .close-btn:hover { transform: scale(1.05); background: #4E342E; }
+
+    .timer-container {
+        transition: opacity 0.5s ease;
+    }
+</style>
+</head>
+<body class="h-screen relative overflow-hidden">
+
+    <div class="animated-bg"></div>
+    <canvas id="chocoCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- 1. COUNTDOWN SCREEN -->
+    <div id="countdownScreen" class="absolute inset-0 z-40 flex flex-col items-center justify-center text-center p-6 timer-container">
+        <h1 class="text-[#7B3F00] text-3xl md:text-5xl font-bold mb-6 drop-shadow-md font-antique tracking-wider">
+    Surprise Unlocks In ...
+</h1>
+        
+        
+        <!-- Timer -->
+        <div id="timer" class="text-4xl md:text-7xl font-bold text-white mb-8 font-hand drop-shadow-lg tabular-nums">
+            00:00:00
+        </div>
+
+        <p class="text-[#7B3F00]/80 font-outfit text-sm">
+            Please wait for the sweet surprise! 🕰️
+        </p>
+    </div>
+
+    <!-- 2. THE MAIN SCENE (Hidden initially) -->
+    <div id="mainScene" class="absolute inset-0 hidden z-10">
+        
+        <!-- TITLE -->
+        <div class="absolute top-12 w-full text-center">
+            <h1 class="text-[#3E2723] text-5xl md:text-6xl font-pacifico drop-shadow-md animate-pulse tracking-wide" style="text-shadow: 2px 2px 0px rgba(255,255,255,0.3);">
+                Click the Letters
+            </h1>
+        </div>
+
+        <!-- CAT IMAGE -->
+        <div class="cat-container">
+            <img src="bear.png" 
+                 class="cat-img" 
+                 alt="Your Cat">
+        </div>
+
+        <!-- LETTER PACK -->
+        <div class="letter-pack" onclick="openNextLetter()">
+            <div class="click-hint">Open Me ✨</div>
+            <div class="envelope-stack"></div>
+            <div class="heart-sticker">💖</div>
+            
+            <!-- HEART PROGRESS BAR -->
+            <div id="heartProgress" class="heart-progress"></div>
+        </div>
+    </div>
+
+    <!-- 3. MODAL (Dynamic Content) -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="choco-frame">
+            <div class="truffle-border"></div>
+            
+            <div id="letterPaper" class="letter-paper transition-colors duration-500">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-br"></div>
+                
+                <h2 id="modalTitle" class="text-3xl mb-4 transition-all"></h2>
+                <p id="modalBody" class="text-lg leading-relaxed mb-4 transition-all"></p>
+                <div id="modalEmoji" class="text-4xl animate-bounce mb-2"></div>
+
+                <!-- CAT IMG ON CARD -->
+                <img src="ggg.png" 
+                     class="w-16 h-16 mb-4 drop-shadow-sm hover:scale-110 transition-transform" 
+                     alt="Decorative Cat">
+
+                <button onclick="closeModal()" class="close-btn">
+                    Keep Reading...
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. END SCREEN (Hidden initially) -->
+    <div id="endScreen" class="absolute inset-0 z-50 hidden flex-col items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-500">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md mx-4 border-4 border-[#8D6E63] relative">
+            
+            <!-- Floating Elements -->
+            <div class="absolute -top-6 -left-6 text-4xl animate-bounce">🍫</div>
+            <div class="absolute -bottom-6 -right-6 text-4xl animate-bounce">✨</div>
+
+            <h2 class="text-4xl font-pacifico text-[#3E2723] mb-4">Hope You Liked It!</h2>
+            <p class="text-gray-600 mb-8 font-hand text-xl">Wishing you the sweetest New Year ever! 💖</p>
+            
+            <div class="flex gap-4 justify-center flex-wrap">
+                <a href="mailto:nedumaranpm22@gmail.com?subject=Re: Sweet New Year Surprise 🍫"
+   class="px-6 py-3 bg-pink-500 text-white rounded-full font-bold hover:bg-pink-600 transition shadow-lg flex items-center gap-2 transform hover:scale-105">
+                   <span>Reply 💌</span>
+                </a>
+                <button onclick="replayExperience()" 
+                        class="px-6 py-3 bg-[#5D4037] text-white rounded-full font-bold hover:bg-[#4E342E] transition shadow-lg flex items-center gap-2 transform hover:scale-105">
+                    <span>Replay 🔄</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    /* --- DATA: THE LETTERS (6 CARDS) --- */
+    const letters = [
+        {
+            title: "My Dearest Madam 💖",
+            body: "You taught me so many things like Java, Maths, DSA and more. Honestly, I learned more from your 2.30 😅min audio than from lectures.",
+            emoji: "🍫",
+            bg: "#fff0f6", 
+            text: "#880e4f",
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        },
+        {
+            title: "A Sweet Reminder",
+            body: "Sometimes you made really funny jokes and they made me laugh a lot 🤣. You never accept my compliment 😅 and that made me laugh too😂 ",
+            emoji: "✨",
+            bg: "#fffde7", 
+            text: "#f57f17",
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        },
+        {
+            title: "Forever Us",
+            body: "I wonder how this bond grew so quickly 🤔💫. Sometimes it feels like a nightmare 😅 — the faster a bond builds, the faster it might break 💔. I just hope that won’t happen 🤞😂✨.",
+            emoji: "🍯",
+            bg: "#efebe9", 
+            text: "#5d4037",
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        },
+        /* --- NEW CARD 1 --- */
+        {
+            title: "Beautiful Moments",
+            body: "“The SIH really made this change possible. Our late-night talks were so much fun, and every memory we made this year is special to me.",
+            emoji: "📸",
+            bg: "#f3e5f5", // Lavender background
+            text: "#6a1b9a", // Deep Purple text
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        },
+        /* --- NEW CARD 2 --- */
+        {
+            title: "Dream Big",
+            body: "Try to dream this year instead of just sleeping through it 😂",
+            emoji: "🌟",
+            bg: "#e0f2f1", // Mint background
+            text: "#00695c", // Teal text
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        },
+        {
+            title: "Happy New Year! pa🍫 💖",
+            body: "If you still don’t believe in me and think it was all just a uruttu like the compliment thing 🤷‍♂️😂 then I can’t do anything, ma’am 😅👩✨",
+            emoji: "🥂",
+            bg: "#e3f2fd", 
+            text: "#1565c0",
+            fontTitle: "font-antique",
+            fontBody: "font-hand"
+        }
+    ];
+
+    /* --- STATE --- */
+    let currentLetterIndex = 0;
+    let countdownInterval;
+
+    /* --- DOM ELEMENTS --- */
+    const timerEl = document.getElementById("timer");
+    const countdownScreen = document.getElementById("countdownScreen");
+    const mainScene = document.getElementById("mainScene");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const endScreen = document.getElementById("endScreen");
+    const heartProgress = document.getElementById("heartProgress");
+    
+    // Modal Inner
+    const letterPaper = document.getElementById("letterPaper");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+    const modalEmoji = document.getElementById("modalEmoji");
+
+    /* --- INITIALIZE HEARTS --- */
+    function initHearts() {
+        heartProgress.innerHTML = '';
+        letters.forEach(() => {
+            const heart = document.createElement('div');
+            heart.textContent = '❤️';
+            heart.className = 'progress-heart';
+            heartProgress.appendChild(heart);
+        });
+    }
+
+    /* --- TIMER LOGIC (TEST MODE) --- */
+    function startTimer() {
+        initHearts();
+        
+        // --- 🔴 TESTING MODE: 5 SECONDS ---
+        //const targetDate = new Date().getTime() + 6000; 
+
+        // --- 🟢 REAL MODE (Saved for later) ---
+         const targetDate = new Date("2026-01-01T00:00:00+05:30").getTime();
+
+        countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                timerEl.textContent = "00:00:00";
+                unlockSurprise();
+                return;
+            }
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timerEl.textContent = 
+                (hours < 10 ? "0" + hours : hours) + " : " + 
+                (minutes < 10 ? "0" + minutes : minutes) + " : " + 
+                (seconds < 10 ? "0" + seconds : seconds);
+
+        }, 1000);
+    }
+
+    function unlockSurprise() {
+        countdownScreen.style.opacity = '0';
+        setTimeout(() => {
+            countdownScreen.classList.add('hidden');
+            revealScene();
+        }, 500);
+    }
+
+    /* --- SCENE LOGIC --- */
+    function revealScene() {
+        mainScene.classList.remove('hidden');
+        startChocolateRain(); 
+    }
+
+    function openNextLetter() {
+        if (currentLetterIndex >= letters.length) {
+            return;
+        }
+
+        // Pop heart visual
+        const hearts = heartProgress.children;
+        if (hearts[currentLetterIndex]) {
+            hearts[currentLetterIndex].classList.add('popped');
+        }
+
+        const data = letters[currentLetterIndex];
+        
+        modalTitle.textContent = data.title;
+        modalBody.textContent = data.body;
+        modalEmoji.textContent = data.emoji;
+
+        letterPaper.style.backgroundColor = data.bg;
+        letterPaper.style.color = data.text;
+        
+        modalTitle.className = `text-4xl mb-4 transition-all ${data.fontTitle}`;
+        modalBody.className = `text-xl leading-relaxed mb-6 transition-all ${data.fontBody}`;
+
+        modalOverlay.classList.add('active');
+    }
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+        currentLetterIndex++; 
+        
+        // Check if finished
+        if (currentLetterIndex >= letters.length) {
+            setTimeout(() => {
+                endScreen.classList.remove('hidden');
+                endScreen.classList.add('flex');
+            }, 600); 
+        }
+    }
+
+    function replayExperience() {
+        currentLetterIndex = 0;
+        initHearts();
+        
+        endScreen.classList.remove('flex');
+        endScreen.classList.add('hidden');
+    }
+
+    /* --- CINEMATIC SLOW CHOCOLATE RAIN ENGINE --- */
+    const canvas = document.getElementById("chocoCanvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class ChocoParticle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = -20;
+            this.vx = (Math.random() - 0.5) * 0.5; 
+            this.vy = Math.random() * 0.4 + 0.1; // Slow speed
+            this.size = Math.random() * 15 + 8;
+            this.type = Math.random() > 0.6 ? 'circle' : 'square';
+            this.rotation = Math.random() * Math.PI;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+
+            const colors = [
+                '#3E2723', '#5D4037', '#795548', '#8D6E63', '#D7CCC8', '#FFD700'
+            ];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.rotation += this.rotationSpeed;
+
+            if (this.y > canvas.height + 20) {
+                this.y = -20;
+                this.x = Math.random() * canvas.width;
+            }
+        }
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            ctx.fillStyle = this.color;
+            
+            if (this.type === 'square') {
+                ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.beginPath();
+            ctx.arc(-this.size/4, -this.size/4, this.size/5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+    }
+
+    function startChocolateRain() {
+        for(let i=0; i<30; i++) {
+            particles.push(new ChocoParticle());
+            particles[i].y = Math.random() * canvas.height; 
+        }
+        animateRain();
+    }
+
+    function animateRain() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animateRain);
+    }
+
+    // Start Timer
+    startTimer();
+
+</script>
+</body>
+</html>
